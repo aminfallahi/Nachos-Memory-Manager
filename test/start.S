@@ -130,6 +130,22 @@ Write:
 	j	$31
 	.end Write
 
+	.globl ConsoleRead
+	.ent	ConsoleRead
+ConsoleRead:
+	addiu $2,$0,SC_ConsoleRead
+	syscall
+	j	$31
+	.end ConsoleRead
+
+	.globl ConsoleWrite
+	.ent	ConsoleWrite
+ConsoleWrite:
+	addiu $2,$0,SC_ConsoleWrite
+	syscall
+	j	$31
+	.end ConsoleWrite
+
 	.globl Close
 	.ent	Close
 Close:

@@ -27,8 +27,27 @@ int SysAdd(int op1, int op2)
   return op1 + op2;
 }
 
+void SysRead(int addr, int size){
+    printf("SysRead called\n");
+    char* toRead="dummyread";
+    int i;
+    for (i=0; i<size; i++){
+        kernel->machine->WriteMem(addr,1,toRead[i]);
+        addr++;
+    }
+}
 
-
+void SysWrite(int addr, int size){
+    printf("SysWrite called\n");
+    int i;
+    int temp;
+    for (i=0; i<size; i++){
+        kernel->machine->ReadMem(addr,1,&temp);
+        printf("%c",temp);
+        addr++;
+    }
+    printf("\n");
+}
 
 
 
