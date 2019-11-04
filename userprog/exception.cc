@@ -172,9 +172,9 @@ ExceptionHandler(ExceptionType which) {
                     th->Fork((VoidFunctionPtr) userExecFunction, th);
                     kernel->machine->WriteRegister(2, th->space->getId());
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
-                    kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                    //kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
                     /* set next program counter for brach execution */
-                    kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                    //kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
                 }
 
                     return;
