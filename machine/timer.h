@@ -27,7 +27,7 @@
 // The following class defines a hardware timer. 
 class Timer : public CallBackObj {
   public:
-    Timer(bool doRandom, CallBackObj *toCall);
+    Timer(int quantum, CallBackObj *toCall);
 				// Initialize the timer, and callback to "toCall"
 				// every time slice.
     virtual ~Timer() {}
@@ -48,6 +48,8 @@ class Timer : public CallBackObj {
     void SetInterrupt();  	// cause an interrupt to occur in the
     				// the future after a fixed or random
 				// delay
+    
+    int quantum;
 };
 
 #endif // TIMER_H

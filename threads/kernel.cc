@@ -85,7 +85,7 @@ Kernel::Kernel(int argc, char **argv)
 //----------------------------------------------------------------------
 
 void
-Kernel::Initialize()
+Kernel::Initialize(int quantum)
 {
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
@@ -99,7 +99,7 @@ Kernel::Initialize()
     stats = new Statistics();		// collect statistics
     interrupt = new Interrupt;		// start up interrupt handling
     scheduler = new Scheduler();	// initialize the ready queue
-    alarm = new Alarm(randomSlice);	// start up time slicing
+    alarm = new Alarm(quantum);	// start up time slicing
     machine = new Machine(debugUserProg);
     synchConsoleIn = new SynchConsoleInput(consoleIn); // input from stdin
     synchConsoleOut = new SynchConsoleOutput(consoleOut); // output to stdout

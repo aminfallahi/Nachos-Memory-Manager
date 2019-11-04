@@ -20,9 +20,9 @@
 //		occur at random, instead of fixed, intervals.
 //----------------------------------------------------------------------
 
-Alarm::Alarm(bool doRandom)
+Alarm::Alarm(int quantum)
 {
-    timer = new Timer(doRandom, this);
+    timer = new Timer(quantum, this);
 }
 
 //----------------------------------------------------------------------

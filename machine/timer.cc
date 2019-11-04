@@ -35,9 +35,10 @@
 //      "toCall" is the interrupt handler to call when the timer expires.
 //----------------------------------------------------------------------
 
-Timer::Timer(bool doRandom, CallBackObj *toCall)
+Timer::Timer(int quantum, CallBackObj *toCall)
 {
-    randomize = doRandom;
+    this->quantum=quantum;
+    randomize=false;
     callPeriodically = toCall;
     disable = FALSE;
     SetInterrupt();
@@ -70,7 +71,7 @@ void
 Timer::SetInterrupt() 
 {
     if (!disable) {
-       int delay = TimerTicks;
+       int delay = quantum;
     
        if (randomize) {
 	     delay = 1 + (RandomNumber() % (TimerTicks * 2));

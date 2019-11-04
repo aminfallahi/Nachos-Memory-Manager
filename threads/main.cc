@@ -45,6 +45,7 @@
 #include "filesys.h"
 #include "openfile.h"
 #include "sysdep.h"
+#include "../userprog/syscall.h"
 
 // global variables
 Kernel *kernel;
@@ -149,6 +150,8 @@ Print(char *name)
     return;
 }
 
+void userExecFunction(Thread* thread);
+
 //----------------------------------------------------------------------
 // RunUserProg
 //      Run the user program in the given file.
@@ -156,12 +159,14 @@ Print(char *name)
 
 void
 RunUserProg(void *filename) {
-    AddrSpace *space = new AddrSpace;
-    ASSERT(space != (AddrSpace *)NULL);
-    if (space->Load((char*)filename)) {  // load the program into the space
-        space->Execute();         // run the program
-    }
-    ASSERTNOTREACHED();
+    Thread * thread = new Thread("");
+    thread->space = new AddrSpace;
+    //ASSERT(space != (AddrSpace *)NULL);
+    thread->space->Load((char*)filename);  // load the program into the space
+    thread->Fork((VoidFunctionPtr)userExecFunction,thread);         // run the program
+    
+    //while (1==1);
+    //ASSERTNOTREACHED();
 }
 
 //----------------------------------------------------------------------
@@ -183,7 +188,10 @@ main(int argc, char **argv)
 {
     int i;
     char *debugArg = "";
-    char *userProgName = NULL;        // default is not to execute a user prog
+    //char *userProgName = NULL;        // default is not to execute a user prog
+    char *userProgNames[100];
+    int userProgCount=0;
+    int quantum=100;
     bool threadTestFlag = false;
     bool consoleTestFlag = false;
     bool networkTestFlag = false;
@@ -210,9 +218,14 @@ main(int argc, char **argv)
 	}
 	else if (strcmp(argv[i], "-x") == 0) {
 	    ASSERT(i + 1 < argc);
-	    userProgName = argv[i + 1];
+	    userProgNames[userProgCount] = argv[i + 1];
+            userProgCount++;
 	    i++;
 	}
+        else if (strcmp(argv[i], "-q") == 0) {
+	    ASSERT(i + 1 < argc);
+            quantum=atoi(argv[i + 1]);
+        }
 	else if (strcmp(argv[i], "-K") == 0) {
 	    threadTestFlag = TRUE;
 	}
@@ -264,7 +277,7 @@ main(int argc, char **argv)
 
     kernel = new Kernel(argc, argv);
 
-    kernel->Initialize();
+    kernel->Initialize(quantum);
 
     CallOnUserAbort(Cleanup);		// if user hits ctl-C
 
@@ -300,8 +313,9 @@ main(int argc, char **argv)
 #endif // FILESYS_STUB
 
     // finally, run an initial user program if requested to do so
-    if (userProgName != NULL) {
-      RunUserProg(userProgName);
+    if (userProgCount > 0) {
+      for (i=0; i<userProgCount; i++)
+        RunUserProg(userProgNames[i]);
     }
 
     // NOTE: if the procedure "main" returns, then the program "nachos"
@@ -314,3 +328,4 @@ main(int argc, char **argv)
     ASSERTNOTREACHED();
 }
 
+ 

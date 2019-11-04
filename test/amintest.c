@@ -15,12 +15,13 @@ main()
     int size=7;
     int tid;
     ConsoleRead(buffer,size);
+    while(1==1)
     ConsoleWrite(buffer,size);
     //tid=ThreadFork(dummyFunc);
     //while(1==1)
     //ConsoleWrite(buffer,size);
     //Exec("/home/amin/Documents/Nachos-Memory-Manager/test/add");
     //while(1==1);
-    Exit(1);
-    ConsoleWrite(buffer,size);
+    //Exit(1);
+    //ConsoleWrite(buffer,size);
 }
