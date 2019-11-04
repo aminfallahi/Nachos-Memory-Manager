@@ -19,7 +19,8 @@ main()
     //tid=ThreadFork(dummyFunc);
     //while(1==1)
     //ConsoleWrite(buffer,size);
-    Exec("/home/amin/Documents/Nachos-Memory-Manager/test/add");
-    while(1==1);
-    Halt();
+    //Exec("/home/amin/Documents/Nachos-Memory-Manager/test/add");
+    //while(1==1);
+    Exit(1);
+    ConsoleWrite(buffer,size);
 }

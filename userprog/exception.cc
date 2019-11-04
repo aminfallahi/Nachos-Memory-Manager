@@ -48,12 +48,12 @@
 //	is in machine.h.
 //----------------------------------------------------------------------
 
-void userForkFunction(int dum){
+void userForkFunction(int dum) {
     kernel->currentThread->RestoreUserState();
     kernel->machine->Run();
 }
 
-void userExecFunction(Thread* thread){
+void userExecFunction(Thread* thread) {
     thread->space->Execute();
 }
 
@@ -143,7 +143,7 @@ ExceptionHandler(ExceptionType which) {
                     child->setUserRegister(PCReg, funcAddr);
                     child->setUserRegister(NextPCReg, funcAddr + 4);
                     child->Fork((VoidFunctionPtr) userForkFunction, 0);
-                    kernel->machine->WriteRegister(2,child->getId());
+                    kernel->machine->WriteRegister(2, child->getId());
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
                     kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
                     /* set next program counter for brach execution */
@@ -153,24 +153,24 @@ ExceptionHandler(ExceptionType which) {
                     return;
                     ASSERTNOTREACHED();
                     break;
-        
+
                 case SC_Exec:
                 {
                     int prog = kernel->machine->ReadRegister(4);
                     int i;
 
                     //reading file name from memory
-                    char* progFile=(char*)malloc(100*sizeof(char));                
-                    for (i=0; ; i++){
-                        kernel->machine->ReadMem(prog+i,1,(int*)&progFile[i]);
-                        if (progFile[i]=='\0')
+                    char* progFile = (char*) malloc(100 * sizeof (char));
+                    for (i = 0;; i++) {
+                        kernel->machine->ReadMem(prog + i, 1, (int*) &progFile[i]);
+                        if (progFile[i] == '\0')
                             break;
                     }
                     Thread *th = new Thread("");
                     th->space = new AddrSpace();
                     th->space->Load(progFile);
                     th->Fork((VoidFunctionPtr) userExecFunction, th);
-                    kernel->machine->WriteRegister(2,th->space->getId());
+                    kernel->machine->WriteRegister(2, th->space->getId());
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
                     kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
                     /* set next program counter for brach execution */
@@ -180,7 +180,20 @@ ExceptionHandler(ExceptionType which) {
                     return;
                     ASSERTNOTREACHED();
                     break;
-                    
+
+                case SC_Exit:
+                {
+                    kernel->currentThread->Finish();
+                    /* set program counter to next instruction (all Instructions are 4 byte wide)*/
+                    kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                    /* set next program counter for brach execution */
+                    kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                }
+
+                    return;
+                    ASSERTNOTREACHED();
+                    break;
+
                 default:
                     cerr << "Unexpected system call " << type << "\n";
                     break;
