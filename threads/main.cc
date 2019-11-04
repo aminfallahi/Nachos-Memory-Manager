@@ -50,6 +50,7 @@
 Kernel *kernel;
 Debug *debug;
 
+
 extern void ThreadTest(void);
 
 //----------------------------------------------------------------------

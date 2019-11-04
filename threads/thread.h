@@ -104,6 +104,10 @@ class Thread {
     char* getName() { return (name); }
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
+    
+    static int lastId;
+    
+    int getId();
 
   private:
     // some of the private data for this class is listed above
@@ -123,12 +127,16 @@ class Thread {
 // while executing kernel code.
 
     int userRegisters[NumTotalRegs];	// user-level CPU register state
+    
+    int id;
 
   public:
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
 
     AddrSpace *space;			// User code this thread is running.
+    
+    void setUserRegister(int,int);
 };
 
 // external function, dummy routine whose sole job is to call Thread::Print

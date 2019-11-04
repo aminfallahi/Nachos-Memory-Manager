@@ -11,9 +11,11 @@ int
 main()
 {
   int result;
+  char* buffer="salam";
   
   result = Add(42, 23);
-
-  Halt();
+  
+  ConsoleWrite(buffer,5);
+  //Halt();
   /* not reached */
 }

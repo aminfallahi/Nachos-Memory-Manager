@@ -22,6 +22,8 @@
 #include "synch.h"
 #include "sysdep.h"
 
+int Thread::lastId;
+
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
 
@@ -36,6 +38,8 @@ const int STACK_FENCEPOST = 0xdedbeef;
 Thread::Thread(char* threadName)
 {
     name = threadName;
+    id=lastId;
+    lastId++;
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
@@ -434,3 +438,10 @@ Thread::SelfTest()
     SimpleThread(0);
 }
 
+void Thread::setUserRegister(int id, int value){
+    userRegisters[id]=value;
+}
+
+int Thread::getId(){
+    return id;
+}

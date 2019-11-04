@@ -21,6 +21,8 @@
 #include "machine.h"
 #include "noff.h"
 
+int AddrSpace::lastId;
+
 //----------------------------------------------------------------------
 // SwapHeader
 // 	Do little endian to big endian conversion on the bytes in the 
@@ -67,6 +69,9 @@ SwapHeader (NoffHeader *noffH)
 
 AddrSpace::AddrSpace()
 {
+    id=lastId;
+    lastId++;
+    
     pageTable = new TranslationEntry[NumPhysPages];
     for (int i = 0; i < NumPhysPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virt page # = phys page #
@@ -79,6 +84,22 @@ AddrSpace::AddrSpace()
     
     // zero out the entire address space
     bzero(kernel->machine->mainMemory, MemorySize);
+}
+
+AddrSpace::AddrSpace(AddrSpace* as)
+{
+    id=lastId;
+    lastId++;
+    
+    pageTable = new TranslationEntry[NumPhysPages];
+    for (int i = 0; i < NumPhysPages; i++) {
+	pageTable[i].virtualPage = as->pageTable[i].virtualPage;	// for now, virt page # = phys page #
+	pageTable[i].physicalPage = as->pageTable[i].physicalPage;
+	pageTable[i].valid = as->pageTable[i].valid;
+	pageTable[i].use = as->pageTable[i].use;
+	pageTable[i].dirty = as->pageTable[i].dirty;
+	pageTable[i].readOnly = as->pageTable[i].readOnly;  
+    }
 }
 
 //----------------------------------------------------------------------
@@ -311,6 +332,6 @@ AddrSpace::Translate(unsigned int vaddr, unsigned int *paddr, int isReadWrite)
     return NoException;
 }
 
-
-
-
+int AddrSpace::getId(){
+    return id;
+}
