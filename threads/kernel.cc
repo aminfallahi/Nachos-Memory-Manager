@@ -111,6 +111,10 @@ Kernel::Initialize(int quantum)
 #endif // FILESYS_STUB
     postOfficeIn = new PostOfficeInput(10);
     postOfficeOut = new PostOfficeOutput(reliability);
+    swapSpace= new FileSystem();
+    swapSpace->Create("swapFile");
+    swapFile=swapSpace->Open("swapFile");
+    swapSpaceCounter=0;
 
     interrupt->Enable();
 }
