@@ -159,6 +159,7 @@ void userExecFunction(Thread* thread);
 
 void
 RunUserProg(void *filename) {
+    printf("running %s\n",(char*)filename);
     Thread * thread = new Thread("");
     thread->space = new AddrSpace;
     //ASSERT(space != (AddrSpace *)NULL);

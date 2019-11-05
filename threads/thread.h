@@ -105,9 +105,9 @@ class Thread {
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
     
-    static int lastId;
+    static int lastPID;
     
-    int getId();
+    int getPID();
 
   private:
     // some of the private data for this class is listed above
@@ -128,7 +128,7 @@ class Thread {
 
     int userRegisters[NumTotalRegs];	// user-level CPU register state
     
-    int id;
+    int pid;
 
   public:
     void SaveUserState();		// save user-level register state

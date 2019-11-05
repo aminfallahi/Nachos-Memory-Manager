@@ -91,7 +91,7 @@ Kernel::Initialize(int quantum)
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 
     
-    Thread::lastId=0;
+    Thread::lastPID=0;
     AddrSpace::lastId=0;
     currentThread = new Thread("main");		
     currentThread->setStatus(RUNNING);
