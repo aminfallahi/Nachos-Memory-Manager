@@ -10,7 +10,7 @@ int
 main()
 {
 
-    char *buffer="aaaaaaaa";
+    char *buffer="bbbbbb";
     int size=7;
     int tid;
     //ConsoleRead(buffer,size);
@@ -19,7 +19,7 @@ main()
     //tid=ThreadFork(dummyFunc);
     //while(1==1)
     //ConsoleWrite(buffer,size);
-    Exec("/home/amin/Documents/Nachos-Memory-Manager/test/add");
+    //Exec("/home/amin/Documents/Nachos-Memory-Manager/test/add");
     //ThreadFork((void*)dummyFunc);
     //ConsoleWrite(buffer,size);
     //while(1==1);

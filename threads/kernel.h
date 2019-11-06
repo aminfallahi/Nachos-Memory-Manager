@@ -18,6 +18,7 @@
 #include "alarm.h"
 #include "filesys.h"
 #include "machine.h"
+#include "bitmap.h"
 
 class PostOfficeInput;
 class PostOfficeOutput;
@@ -60,6 +61,10 @@ class Kernel {
     FileSystem *swapSpace;
     OpenFile *swapFile;
     OpenFile *psFiles[100];
+    Bitmap* freeMap;
+    int swapSpaceCounter;
+    TranslationEntry *entryList[100];
+
 
     int hostName;               // machine identifier
 
@@ -69,7 +74,6 @@ class Kernel {
     double reliability;         // likelihood messages are dropped
     char *consoleIn;            // file to read console input from
     char *consoleOut;           // file to send console output to
-    int swapSpaceCounter;
 #ifndef FILESYS_STUB
     bool formatFlag;          // format the disk if this is true
 #endif

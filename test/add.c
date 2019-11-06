@@ -13,7 +13,7 @@ main()
   int result;
   char* buffer="salam";
   
-  result = Add(42, 23);
+  //result = Add(42, 23);
   //while (1==1)
   ConsoleWrite(buffer,5);
   //Halt();

@@ -17,6 +17,7 @@
 #include "synchconsole.h"
 #include "synchdisk.h"
 #include "post.h"
+#include "bitmap.h"
 
 //----------------------------------------------------------------------
 // Kernel::Kernel
@@ -115,6 +116,7 @@ Kernel::Initialize(int quantum)
     swapSpace->Create("swapFile");
     swapFile=swapSpace->Open("swapFile");
     swapSpaceCounter=0;
+    freeMap=new Bitmap(NumPhysPages);
 
     interrupt->Enable();
 }

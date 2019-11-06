@@ -53,8 +53,12 @@ void userForkFunction(int dum) {
     kernel->machine->Run();
 }
 
-void userExecFunction(Thread* thread) {
-    thread->space->Execute();
+void userExecFunction(void* progFile) {
+    printf("%s executing thread with pid %d\n", (char*) progFile, kernel->currentThread->getPID());
+    kernel->currentThread->space = new AddrSpace();
+    kernel->currentThread->space->Load((char*) progFile);
+    kernel->currentThread->space->Execute();
+    kernel->machine->WriteRegister(2, kernel->currentThread->space->getId());
 }
 
 void
@@ -128,6 +132,7 @@ ExceptionHandler(ExceptionType which) {
                     kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
                     /* set next program counter for brach execution */
                     kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                    kernel->machine->WriteRegister(4, 0);
                 }
 
                     return;
@@ -167,14 +172,11 @@ ExceptionHandler(ExceptionType which) {
                             break;
                     }
                     Thread *th = new Thread("");
-                    th->space = new AddrSpace();
-                    th->space->Load(progFile);
-                    th->Fork((VoidFunctionPtr) userExecFunction, th);
-                    kernel->machine->WriteRegister(2, th->space->getId());
+                    th->Fork((VoidFunctionPtr) userExecFunction, (void*) progFile);
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
-                    //kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                    kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
                     /* set next program counter for brach execution */
-                    //kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
+                    kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
                 }
 
                     return;

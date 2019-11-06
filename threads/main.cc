@@ -160,14 +160,12 @@ void userExecFunction(Thread* thread);
 void
 RunUserProg(void *filename) {
     printf("running %s\n",(char*)filename);
-    Thread * thread = new Thread("");
-    thread->space = new AddrSpace;
-    //ASSERT(space != (AddrSpace *)NULL);
-    thread->space->Load((char*)filename);  // load the program into the space
-    thread->Fork((VoidFunctionPtr)userExecFunction,thread);         // run the program
+    kernel->currentThread->space = new AddrSpace();
     
-    //while (1==1);
-    //ASSERTNOTREACHED();
+    ASSERT(kernel->currentThread->space != (AddrSpace *)NULL);
+    kernel->currentThread->space->Load((char*)filename);  // load the program into the space
+    kernel->currentThread->space->Execute();
+    ASSERTNOTREACHED();
 }
 
 //----------------------------------------------------------------------
@@ -315,8 +313,10 @@ main(int argc, char **argv)
 
     // finally, run an initial user program if requested to do so
     if (userProgCount > 0) {
-      for (i=0; i<userProgCount; i++)
-        RunUserProg(userProgNames[i]);
+      for (i=0; i<userProgCount; i++){
+          Thread* thread=new Thread("");
+          thread->Fork((VoidFunctionPtr)RunUserProg,(void*) userProgNames[i]);
+      }
     }
 
     // NOTE: if the procedure "main" returns, then the program "nachos"
