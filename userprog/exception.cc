@@ -51,6 +51,7 @@
 void userForkFunction(int dum) {
     kernel->currentThread->RestoreUserState();
     kernel->machine->Run();
+    kernel->currentThread->Finish();
 }
 
 void userExecFunction(void* progFile) {
@@ -132,7 +133,6 @@ ExceptionHandler(ExceptionType which) {
                     kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
                     /* set next program counter for brach execution */
                     kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg) + 4);
-                    kernel->machine->WriteRegister(4, 0);
                 }
 
                     return;
@@ -146,7 +146,7 @@ ExceptionHandler(ExceptionType which) {
                     child->space = new AddrSpace(kernel->currentThread->space);
                     child->SaveUserState();
                     child->setUserRegister(PCReg, funcAddr);
-                    child->setUserRegister(NextPCReg, funcAddr + 4);
+                    child->setUserRegister(NextPCReg, funcAddr+4);
                     child->Fork((VoidFunctionPtr) userForkFunction, 0);
                     kernel->machine->WriteRegister(2, child->getPID());
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
