@@ -7,4 +7,52 @@
         <activeConfTypeElem>0</activeConfTypeElem>
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/main.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/stats.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/alarm.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/thread.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/userprog/exception.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/translate.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/userprog/addrspace.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/test/segments.c</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/test/add.c</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/test/Makefile</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/userprog/syscall.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/kernel.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/userprog/addrspace.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/main.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/alarm.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/switch.S</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/userprog/ksyscall.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/test/start.S</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/machine.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/timer.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/translate.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/interrupt.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/test/Makefile.dep</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/timer.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/mipssim.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/lib/bitmap.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/thread.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/stats.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/synchlist.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/lib/debug.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/lib/debug.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/test/amintest.c</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/kernel.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/filesys/filesys.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/filesys/openfile.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/machine.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/machine/mipssim.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/synchlist.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/synch.h</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/threads/threadtest.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/filesys/filesys.cc</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/build.linux/Makefile</file>
+            <file>file:/home/amin/Documents/Nachos-Memory-Manager/lib/sysdep.cc</file>
+        </group>
+    </open-files>
 </project-private>

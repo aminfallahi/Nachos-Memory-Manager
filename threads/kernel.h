@@ -62,9 +62,10 @@ class Kernel {
     OpenFile *swapFile;
     OpenFile *psFiles[100];
     Bitmap* freeMap;
+    Bitmap* swapFreeMap;
     int swapSpaceCounter;
     TranslationEntry *entryList[100];
-
+    int writeToSwap(char*,int);
 
     int hostName;               // machine identifier
 

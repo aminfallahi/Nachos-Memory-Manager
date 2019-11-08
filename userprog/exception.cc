@@ -146,7 +146,7 @@ ExceptionHandler(ExceptionType which) {
                     child->space = new AddrSpace(kernel->currentThread->space);
                     child->SaveUserState();
                     child->setUserRegister(PCReg, funcAddr);
-                    child->setUserRegister(NextPCReg, funcAddr+4);
+                    child->setUserRegister(NextPCReg, funcAddr + 4);
                     child->Fork((VoidFunctionPtr) userForkFunction, 0);
                     kernel->machine->WriteRegister(2, child->getPID());
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
@@ -200,6 +200,22 @@ ExceptionHandler(ExceptionType which) {
                     cerr << "Unexpected system call " << type << "\n";
                     break;
             }
+            break;
+        case PageFaultException:
+        {
+            int vAddr = kernel->machine->ReadRegister(39);
+            printf("page fault vaddr: %d\n",vAddr);
+            int vpn = vAddr / PageSize;
+            int ppn=kernel->freeMap->FindAndSet();
+            printf("ppn: %d\n",ppn);
+            if (ppn != -1) { //there is room in physical memory
+                kernel->currentThread->space->swapIn(ppn, vpn);
+            } else { //need to swap out
+
+            }
+        }
+            return;
+            ASSERTNOTREACHED();
             break;
         default:
             cerr << "Unexpected user mode exception" << (int) which << "\n";

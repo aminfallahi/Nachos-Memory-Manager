@@ -40,9 +40,15 @@ class AddrSpace {
     // is 0 for Read, 1 for Write.
     ExceptionType Translate(unsigned int vaddr, unsigned int *paddr, int mode);
     
+    TranslationEntry *getPageEntry(int vpn);
+    
+    void swapIn(int ppn, int vpn);
+    
     static int lastId;
     
     int getId();
+    
+    void printPageTable();
 
   private:
       

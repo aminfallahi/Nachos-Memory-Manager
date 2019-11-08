@@ -117,6 +117,7 @@ Kernel::Initialize(int quantum)
     swapFile=swapSpace->Open("swapFile");
     swapSpaceCounter=0;
     freeMap=new Bitmap(NumPhysPages);
+    swapFreeMap=new Bitmap(NumVirtPages);
 
     interrupt->Enable();
 }
@@ -251,3 +252,9 @@ Kernel::NetworkTest() {
     // Then we're done!
 }
 
+int Kernel::writeToSwap(char* toWrite, int size){
+    int vpn=swapFreeMap->FindAndSet();
+    swapFile->WriteAt(toWrite,size,vpn/*swapSpaceCounter*/);
+    swapSpaceCounter++;
+    return vpn;/*swapSpaceCounter-1*/
+}
