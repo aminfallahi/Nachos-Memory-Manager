@@ -60,12 +60,11 @@ class Kernel {
     
     FileSystem *swapSpace;
     OpenFile *swapFile;
-    OpenFile *psFiles[100];
     Bitmap* freeMap;
-    Bitmap* swapFreeMap;
     int swapSpaceCounter;
-    TranslationEntry *entryList[100];
+    List<TranslationEntry*> entryList;
     int writeToSwap(char*,int);
+    void printEntryList();
 
     int hostName;               // machine identifier
 

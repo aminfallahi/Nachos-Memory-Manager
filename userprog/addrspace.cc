@@ -164,16 +164,20 @@ AddrSpace::Load(char *fileName) {
     //read userfile page by page and put each page in swap file, save the position of the page in swapfile
     char* buffer=new char[PageSize];
     int pageIndex=0;
-    for (int i=0; i<divRoundUp(noffH.code.size,PageSize); i++,pageIndex++){
+    for (int i=0; i<numPages; i++,pageIndex++){
         executable->ReadAt(buffer, PageSize, noffH.code.inFileAddr+i*PageSize);
         pageTable[pageIndex].virtualPage=kernel->writeToSwap(buffer, PageSize);
+        
+        kernel->entryList.Append(&pageTable[pageIndex]);
+        //kernel->entryList[pageTable[pageIndex].virtualPage]=pageTable[pageIndex];
     }
-    for (int i=0; i<divRoundUp(noffH.initData.size,PageSize); i++,pageIndex++){
+    /*for (int i=0; i<divRoundUp(noffH.initData.size,PageSize); i++,pageIndex++){
         executable->ReadAt(buffer, PageSize, noffH.initData.inFileAddr+i*PageSize);
         pageTable[pageIndex].virtualPage=kernel->writeToSwap(buffer, PageSize);
-    }
-    printPageTable();
+    }*/
+    //printPageTable();
 
+    /*
     ASSERT(numPages <= NumPhysPages); // check we're not trying
     // to run anything too big --
     // at least until we have
@@ -207,7 +211,7 @@ AddrSpace::Load(char *fileName) {
                 noffH.readonlyData.size, noffH.readonlyData.inFileAddr);
     }
 #endif
-
+*/
     delete executable; // close file
     return TRUE; // success
 }
@@ -358,10 +362,12 @@ TranslationEntry *AddrSpace::getPageEntry(int vpn){
 }
 
 void AddrSpace::swapIn(int ppn, int vpn){
+    printf("\nswapping in ppn %d vpn %d\n",ppn,vpn);
     char* buffer=new char[PageSize];
     kernel->swapFile->ReadAt(buffer, PageSize, vpn*PageSize);
-    for (int i=ppn*PageSize, j=0; i<ppn*PageSize+PageSize; i++,j++)
-        kernel->machine->mainMemory[ppn*PageSize]=buffer[j];
+    //kernel->machine->WriteMem(vpn*PageSize,PageSize,(int)buffer);
+    for (int i=0; i<PageSize; i++)
+        kernel->machine->mainMemory[ppn*PageSize+i]=buffer[i];
 }
 
 void AddrSpace::printPageTable(){

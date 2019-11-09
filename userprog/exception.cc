@@ -204,14 +204,27 @@ ExceptionHandler(ExceptionType which) {
         case PageFaultException:
         {
             int vAddr = kernel->machine->ReadRegister(39);
-            printf("page fault vaddr: %d\n",vAddr);
+            printf("\npage fault vaddr: %d\n",vAddr);
             int vpn = vAddr / PageSize;
             int ppn=kernel->freeMap->FindAndSet();
-            printf("ppn: %d\n",ppn);
+            printf("\nppn: %d\n",ppn);
             if (ppn != -1) { //there is room in physical memory
                 kernel->currentThread->space->swapIn(ppn, vpn);
+                //set vpn valid bit, let's keep track of all vpns
+                ListIterator<TranslationEntry*> iter(&kernel->entryList);
+                for (; !iter.IsDone(); iter.Next()){
+                    if (iter.Item()->virtualPage==vpn){
+                        iter.Item()->valid=true;
+                        iter.Item()->physicalPage=ppn;
+                    }
+                }
+                //kernel->entryList[vpn]->valid=true;
+                //kernel->entryList[vpn]->physicalPage=ppn;
+                kernel->printEntryList();
+                printf("\n---\n");
+                kernel->currentThread->space->printPageTable();
             } else { //need to swap out
-
+                printf("\n****swap out!\n");
             }
         }
             return;

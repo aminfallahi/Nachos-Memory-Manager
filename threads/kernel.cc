@@ -117,8 +117,7 @@ Kernel::Initialize(int quantum)
     swapFile=swapSpace->Open("swapFile");
     swapSpaceCounter=0;
     freeMap=new Bitmap(NumPhysPages);
-    swapFreeMap=new Bitmap(NumVirtPages);
-
+    //entryList=new List<TranslationEntry*>;
     interrupt->Enable();
 }
 
@@ -253,8 +252,13 @@ Kernel::NetworkTest() {
 }
 
 int Kernel::writeToSwap(char* toWrite, int size){
-    int vpn=swapFreeMap->FindAndSet();
-    swapFile->WriteAt(toWrite,size,vpn/*swapSpaceCounter*/);
+    swapFile->WriteAt(toWrite,size,swapSpaceCounter*size);
     swapSpaceCounter++;
-    return vpn;/*swapSpaceCounter-1*/
+    return swapSpaceCounter-1;
+}
+void Kernel::printEntryList(){
+    printf("\nvpn\tppn\tv\tro\tu\td\n");
+    ListIterator<TranslationEntry*> iter(&entryList);
+    for (; !iter.IsDone(); iter.Next())
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n",iter.Item()->virtualPage,iter.Item()->physicalPage,iter.Item()->valid,iter.Item()->readOnly,iter.Item()->use,iter.Item()->dirty);
 }

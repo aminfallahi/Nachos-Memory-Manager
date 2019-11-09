@@ -1,10 +1,10 @@
 #include "syscall.h"
 //#include <stdio.h>
 
-void dummyFunc(int dum){
+/*void dummyFunc(int dum){
     char *buffer="foooork";
     ConsoleWrite(buffer,6);
-}
+}*/
 
 int
 main()
@@ -20,7 +20,7 @@ main()
     //while(1==1)
     //ConsoleWrite(buffer,size);
     //Exec("/home/amin/Documents/Nachos-Memory-Manager/test/add");
-    ThreadFork(dummyFunc);
+    //ThreadFork(dummyFunc);
     ConsoleWrite(buffer,size);
     //while(1==1);
     //Exit(1);
