@@ -46,6 +46,8 @@
 #include "openfile.h"
 #include "sysdep.h"
 #include "../userprog/syscall.h"
+#include <stdlib.h>
+#include <time.h>
 
 // global variables
 Kernel *kernel;
@@ -185,6 +187,7 @@ RunUserProg(void *filename) {
 int
 main(int argc, char **argv)
 {
+    srand(time(NULL));
     int i;
     char *debugArg = "";
     //char *userProgName = NULL;        // default is not to execute a user prog

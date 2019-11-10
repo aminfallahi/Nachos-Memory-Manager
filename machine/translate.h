@@ -40,6 +40,10 @@ class TranslationEntry {
 			// page is referenced or modified.
     bool dirty;         // This bit is set by the hardware every time the
 			// page is modified.
+    
+    int swapPage;       // The page number in swap file
+    
+    int pid;            // To know which thread this is assigned to
 };
 
 #endif

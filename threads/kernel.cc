@@ -257,8 +257,59 @@ int Kernel::writeToSwap(char* toWrite, int size){
     return swapSpaceCounter-1;
 }
 void Kernel::printEntryList(){
-    printf("\nvpn\tppn\tv\tro\tu\td\n");
+    printf("\nvpn\tppn\tspn\tv\tro\tu\td\tpid\n");
     ListIterator<TranslationEntry*> iter(&entryList);
     for (; !iter.IsDone(); iter.Next())
-        printf("%d\t%d\t%d\t%d\t%d\t%d\n",iter.Item()->virtualPage,iter.Item()->physicalPage,iter.Item()->valid,iter.Item()->readOnly,iter.Item()->use,iter.Item()->dirty);
+        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",iter.Item()->virtualPage,iter.Item()->physicalPage,iter.Item()->swapPage,iter.Item()->valid,iter.Item()->readOnly,iter.Item()->use,iter.Item()->dirty,iter.Item()->pid);
+}
+
+int Kernel::findNextPageToRemove(int replacementAlgorithm){
+    if (replacementAlgorithm==0){
+        return rand()%NumPhysPages;
+    }
+    //int r=rand()%NumPhysPages;
+    /*ListIterator<TranslationEntry*> iter(&entryList);
+    for (; !iter.IsDone(); iter.Next()){
+        if (iter.Item()->pid!=kernel->currentThread->getPID() && iter.Item()->physicalPage!=-1)
+            return iter.Item()->physicalPage;
+    }*/
+}
+
+void Kernel::swapIn(int ppn, int vpn){
+    printf("\nswapping in ppn %d vpn %d\n",ppn,vpn);
+    char* buffer=new char[PageSize];
+    TranslationEntry* currentEntry=kernel->currentThread->space->getPageEntry(vpn);
+    int spn=currentEntry->swapPage;
+    kernel->swapFile->ReadAt(buffer, PageSize, spn*PageSize);
+    //kernel->machine->WriteMem(vpn*PageSize,PageSize,(int)buffer);
+    for (int i=0; i<PageSize; i++)
+        kernel->machine->mainMemory[ppn*PageSize+i]=buffer[i];
+    currentEntry->valid=true;
+    currentEntry->physicalPage=ppn;
+}
+
+void Kernel::swapOut(int ppn){
+    int spn;
+    ListIterator<TranslationEntry*> iter(&entryList);
+    for (; !iter.IsDone(); iter.Next()){
+        if (iter.Item()->physicalPage==ppn){
+            iter.Item()->valid=false;
+            iter.Item()->physicalPage=-1;
+            spn=iter.Item()->swapPage;
+            //iter.Item()->dirty=true;
+        }
+    }
+    char *buffer=new char[PageSize];
+    for (int i=0; i<PageSize; i++){
+        buffer[i]=machine->mainMemory[ppn*PageSize+i];
+    }
+    swapFile->WriteAt(buffer,PageSize,spn*PageSize);
+}
+
+TranslationEntry* Kernel::getPageEntryByVPN(int vpn){
+    ListIterator<TranslationEntry*> iter(&entryList);
+    for (; !iter.IsDone(); iter.Next()){
+        if (iter.Item()->virtualPage==vpn)
+            return iter.Item();
+    }
 }

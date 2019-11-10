@@ -209,15 +209,15 @@ ExceptionHandler(ExceptionType which) {
             int ppn=kernel->freeMap->FindAndSet();
             printf("\nppn: %d\n",ppn);
             if (ppn != -1) { //there is room in physical memory
-                kernel->currentThread->space->swapIn(ppn, vpn);
+                kernel->swapIn(ppn, vpn);
                 //set vpn valid bit, let's keep track of all vpns
-                ListIterator<TranslationEntry*> iter(&kernel->entryList);
+                /*ListIterator<TranslationEntry*> iter(&kernel->entryList);
                 for (; !iter.IsDone(); iter.Next()){
-                    if (iter.Item()->virtualPage==vpn){
+                    if (iter.Item()->pid==kernel->currentThread->getPID() && iter.Item()->virtualPage==vpn){
                         iter.Item()->valid=true;
                         iter.Item()->physicalPage=ppn;
                     }
-                }
+                }*/
                 //kernel->entryList[vpn]->valid=true;
                 //kernel->entryList[vpn]->physicalPage=ppn;
                 kernel->printEntryList();
@@ -225,6 +225,14 @@ ExceptionHandler(ExceptionType which) {
                 kernel->currentThread->space->printPageTable();
             } else { //need to swap out
                 printf("\n****swap out!\n");
+                ppn=kernel->findNextPageToRemove(0);
+                printf("\nswapping out ppn %d\n",ppn);
+                kernel->swapOut(ppn);
+                kernel->swapIn(ppn,vpn);
+                kernel->printEntryList();
+                printf("\n---\n");
+                kernel->currentThread->space->printPageTable();
+                
             }
         }
             return;

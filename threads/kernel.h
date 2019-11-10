@@ -65,6 +65,12 @@ class Kernel {
     List<TranslationEntry*> entryList;
     int writeToSwap(char*,int);
     void printEntryList();
+    int findNextPageToRemove(int);
+    void swapIn(int, int);
+    void swapOut(int);
+    TranslationEntry* getPageEntryByVPN(int);
+
+
 
     int hostName;               // machine identifier
 

@@ -42,14 +42,13 @@ class AddrSpace {
     
     TranslationEntry *getPageEntry(int vpn);
     
-    void swapIn(int ppn, int vpn);
-    
+      
     static int lastId;
     
     int getId();
     
     void printPageTable();
-
+    
   private:
       
     TranslationEntry *pageTable;	// Assume linear page table translation
