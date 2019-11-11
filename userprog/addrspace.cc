@@ -80,6 +80,7 @@ AddrSpace::AddrSpace() {
         pageTable[i].readOnly = FALSE;
         pageTable[i].swapPage = -1;
         pageTable[i].pid=kernel->currentThread->getPID();
+        pageTable[i].usage=0;
     }
 
     // zero out the entire address space
@@ -100,6 +101,7 @@ AddrSpace::AddrSpace(AddrSpace* as) {
         pageTable[i].readOnly = as->pageTable[i].readOnly;
         pageTable[i].swapPage = as->pageTable[i].swapPage;
         pageTable[i].pid = as->pageTable[i].pid;
+        pageTable[i].usage = as->pageTable[i].usage;
     }
 }
 
@@ -165,6 +167,7 @@ AddrSpace::Load(char *fileName) {
         pageTable[i].readOnly = false;
         pageTable[i].swapPage = -1;
         pageTable[i].pid = kernel->currentThread->getPID();        
+        pageTable[i].usage = 0;
     }
 
     //read userfile page by page and put each page in swap file, save the position of the page in swapfile
@@ -368,9 +371,9 @@ TranslationEntry *AddrSpace::getPageEntry(int vpn){
 }
 
 void AddrSpace::printPageTable(){
-    printf("vpn\tppn\tspn\tv\tro\tu\td\tpid\n");
+    printf("vpn\tppn\tspn\tv\tro\tu\td\tpid\tusage\n");
     for (int i=0; i<numPages; i++){
-        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",pageTable[i].virtualPage,pageTable[i].physicalPage,pageTable[i].swapPage,pageTable[i].valid,pageTable[i].readOnly,pageTable[i].use,pageTable[i].dirty,pageTable[i].pid);
+        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",pageTable[i].virtualPage,pageTable[i].physicalPage,pageTable[i].swapPage,pageTable[i].valid,pageTable[i].readOnly,pageTable[i].use,pageTable[i].dirty,pageTable[i].pid,pageTable[i].usage);
     }
 }
 

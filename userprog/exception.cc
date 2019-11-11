@@ -203,6 +203,7 @@ ExceptionHandler(ExceptionType which) {
             break;
         case PageFaultException:
         {
+            kernel->numFaults++;
             int vAddr = kernel->machine->ReadRegister(39);
             printf("\npage fault vaddr: %d\n",vAddr);
             int vpn = vAddr / PageSize;
@@ -220,18 +221,18 @@ ExceptionHandler(ExceptionType which) {
                 }*/
                 //kernel->entryList[vpn]->valid=true;
                 //kernel->entryList[vpn]->physicalPage=ppn;
-                kernel->printEntryList();
-                printf("\n---\n");
-                kernel->currentThread->space->printPageTable();
+                //kernel->printEntryList();
+                //printf("\n---\n");
+                //kernel->currentThread->space->printPageTable();
             } else { //need to swap out
                 printf("\n****swap out!\n");
-                ppn=kernel->findNextPageToRemove(0);
+                ppn=kernel->findNextPageToRemove(1);
                 printf("\nswapping out ppn %d\n",ppn);
                 kernel->swapOut(ppn);
                 kernel->swapIn(ppn,vpn);
-                kernel->printEntryList();
-                printf("\n---\n");
-                kernel->currentThread->space->printPageTable();
+                //kernel->printEntryList();
+                //printf("\n---\n");
+                //kernel->currentThread->space->printPageTable();
                 
             }
         }

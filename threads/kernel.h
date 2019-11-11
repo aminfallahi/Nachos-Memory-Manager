@@ -69,6 +69,9 @@ class Kernel {
     void swapIn(int, int);
     void swapOut(int);
     TranslationEntry* getPageEntryByVPN(int);
+    
+    int numRefs; //total number of memory references
+    int numFaults; //total number of page faults
 
 
 

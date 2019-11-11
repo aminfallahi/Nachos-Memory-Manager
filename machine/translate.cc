@@ -188,6 +188,13 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
     unsigned int vpn, offset;
     TranslationEntry *entry;
     unsigned int pageFrame;
+    
+    //increase the usage count for this vpn
+    kernel->getPageEntryByVPN((int)virtAddr/PageSize)->usage++;
+    kernel->numRefs++;
+    printf("\nTotal Number of References: %d\n",kernel->numRefs);
+    printf("\nTotal Number of Page Faults: %d\n",kernel->numFaults);
+    printf("\nHit Rate: %f\n",1-kernel->numFaults/kernel->numRefs);
 
     DEBUG(dbgAddr, "\tTranslate " << virtAddr/PageSize << (writing ? " , write" : " , read"));
 

@@ -44,6 +44,8 @@ class TranslationEntry {
     int swapPage;       // The page number in swap file
     
     int pid;            // To know which thread this is assigned to
+    
+    int usage;
 };
 
 #endif

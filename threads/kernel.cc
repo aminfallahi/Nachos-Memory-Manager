@@ -119,6 +119,8 @@ Kernel::Initialize(int quantum)
     freeMap=new Bitmap(NumPhysPages);
     //entryList=new List<TranslationEntry*>;
     interrupt->Enable();
+    numFaults=0;
+    numRefs=0;
 }
 
 //----------------------------------------------------------------------
@@ -257,16 +259,29 @@ int Kernel::writeToSwap(char* toWrite, int size){
     return swapSpaceCounter-1;
 }
 void Kernel::printEntryList(){
-    printf("\nvpn\tppn\tspn\tv\tro\tu\td\tpid\n");
+    printf("\nvpn\tppn\tspn\tv\tro\tu\td\tpid\tusage\n");
     ListIterator<TranslationEntry*> iter(&entryList);
     for (; !iter.IsDone(); iter.Next())
-        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",iter.Item()->virtualPage,iter.Item()->physicalPage,iter.Item()->swapPage,iter.Item()->valid,iter.Item()->readOnly,iter.Item()->use,iter.Item()->dirty,iter.Item()->pid);
+        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",iter.Item()->virtualPage,iter.Item()->physicalPage,iter.Item()->swapPage,iter.Item()->valid,iter.Item()->readOnly,iter.Item()->use,iter.Item()->dirty,iter.Item()->pid,iter.Item()->usage);
 }
 
 int Kernel::findNextPageToRemove(int replacementAlgorithm){
-    if (replacementAlgorithm==0){
+    if (replacementAlgorithm==0){               //random replacement
         return rand()%NumPhysPages;
     }
+    else{           //NFU replacement algorithm
+        ListIterator<TranslationEntry*> iter(&entryList);
+        int ppn;
+        int minUsage=9999999;
+        for (; !iter.IsDone(); iter.Next()){
+            if (iter.Item()->usage<minUsage && iter.Item()->physicalPage>-1){
+                minUsage=iter.Item()->usage;
+                ppn=iter.Item()->physicalPage;
+            }
+        }
+        return ppn;
+    }
+    return rand()%NumPhysPages;
     //int r=rand()%NumPhysPages;
     /*ListIterator<TranslationEntry*> iter(&entryList);
     for (; !iter.IsDone(); iter.Next()){
@@ -309,7 +324,7 @@ void Kernel::swapOut(int ppn){
 TranslationEntry* Kernel::getPageEntryByVPN(int vpn){
     ListIterator<TranslationEntry*> iter(&entryList);
     for (; !iter.IsDone(); iter.Next()){
-        if (iter.Item()->virtualPage==vpn)
+        if (iter.Item()->virtualPage==vpn && iter.Item()->pid==kernel->currentThread->getPID())
             return iter.Item();
     }
 }
