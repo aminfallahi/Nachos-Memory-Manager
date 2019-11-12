@@ -87,12 +87,12 @@ AddrSpace::AddrSpace() {
     //bzero(kernel->machine->mainMemory, MemorySize);
 }
 
-AddrSpace::AddrSpace(AddrSpace* as) {
+AddrSpace::AddrSpace(AddrSpace* as, int pid) {
     id = lastId;
     lastId++;
-
-    pageTable = new TranslationEntry[NumPhysPages];
-    for (int i = 0; i < NumPhysPages; i++) {
+    numPages=as->numPages;
+    pageTable = new TranslationEntry[numPages];
+    for (int i = 0; i < numPages; i++) {
         pageTable[i].virtualPage = as->pageTable[i].virtualPage; // for now, virt page # = phys page #
         pageTable[i].physicalPage = as->pageTable[i].physicalPage;
         pageTable[i].valid = as->pageTable[i].valid;
@@ -100,8 +100,9 @@ AddrSpace::AddrSpace(AddrSpace* as) {
         pageTable[i].dirty = as->pageTable[i].dirty;
         pageTable[i].readOnly = as->pageTable[i].readOnly;
         pageTable[i].swapPage = as->pageTable[i].swapPage;
-        pageTable[i].pid = as->pageTable[i].pid;
+        pageTable[i].pid = pid;
         pageTable[i].usage = as->pageTable[i].usage;
+        kernel->entryList.Append(&pageTable[i]);
     }
 }
 
@@ -376,4 +377,3 @@ void AddrSpace::printPageTable(){
         printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",pageTable[i].virtualPage,pageTable[i].physicalPage,pageTable[i].swapPage,pageTable[i].valid,pageTable[i].readOnly,pageTable[i].use,pageTable[i].dirty,pageTable[i].pid,pageTable[i].usage);
     }
 }
-

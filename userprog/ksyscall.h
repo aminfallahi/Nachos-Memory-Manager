@@ -28,7 +28,6 @@ int SysAdd(int op1, int op2)
 }
 
 void SysRead(int addr, int size){
-    printf("SysRead called\n");
     char* toRead="dummyread";
     int i;
     for (i=0; i<size; i++){
@@ -38,7 +37,6 @@ void SysRead(int addr, int size){
 }
 
 void SysWrite(int addr, int size){
-    printf("SysWrite called\n");
     int i;
     int temp;
     for (i=0; i<size; i++){

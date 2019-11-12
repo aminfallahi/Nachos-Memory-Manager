@@ -22,7 +22,7 @@ class AddrSpace {
   public:
     AddrSpace();			// Create an address space.
     ~AddrSpace();			// De-allocate an address space
-    AddrSpace(AddrSpace*);        // Copy constructor
+    AddrSpace(AddrSpace*, int);        // Copy constructor
 
     bool Load(char *fileName);		// Load a program into addr space from
                                         // a file
@@ -48,6 +48,8 @@ class AddrSpace {
     int getId();
     
     void printPageTable();
+    
+    void setPTPID(int);
     
   private:
       

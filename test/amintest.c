@@ -1,10 +1,9 @@
 #include "syscall.h"
-//#include <stdio.h>
 
-/*void dummyFunc(int dum){
+void dummyFunc(int dum){
     char *buffer="foooork";
     ConsoleWrite(buffer,6);
-}*/
+}
 
 int
 main()
@@ -13,16 +12,12 @@ main()
     char *buffer="aaaaaaaa";
     int size=7;
     int tid=0;
-    //ConsoleRead(buffer,size);
-    //while(1==1)
+    int i;
+    ConsoleRead(buffer,size);
+    ThreadFork(dummyFunc);
+
+    for (i=0; i<10; i++)
+        Exec("../test/amintest2");
     ConsoleWrite(buffer,size);
-    //tid=ThreadFork(dummyFunc);
-    //while(1==1)
-    //ConsoleWrite(buffer,size);
-    //Exec("/home/amin/Documents/Nachos-Memory-Manager/test/add");
-    //ThreadFork(dummyFunc);
-    ConsoleWrite(buffer,size);
-    //while(1==1);
-    //Exit(1);
-    //ConsoleWrite(buffer,size);
+
 }

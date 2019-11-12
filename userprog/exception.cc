@@ -143,7 +143,7 @@ ExceptionHandler(ExceptionType which) {
                 {
                     int funcAddr = kernel->machine->ReadRegister(4);
                     Thread *child = new Thread("");
-                    child->space = new AddrSpace(kernel->currentThread->space);
+                    child->space = new AddrSpace(kernel->currentThread->space, child->getPID());
                     child->SaveUserState();
                     child->setUserRegister(PCReg, funcAddr);
                     child->setUserRegister(NextPCReg, funcAddr + 4);
@@ -185,6 +185,10 @@ ExceptionHandler(ExceptionType which) {
 
                 case SC_Exit:
                 {
+                    printf("\nTotal Number of References: %d\n", kernel->numRefs);
+                    printf("\nTotal Number of Page Faults: %d\n", kernel->numFaults);
+                    float hitRate = 1 - ((float) kernel->numFaults) / ((float) kernel->numRefs);
+                    printf("\nHit Rate: %f\n", hitRate);
                     kernel->currentThread->Finish();
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
                     kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
@@ -205,35 +209,23 @@ ExceptionHandler(ExceptionType which) {
         {
             kernel->numFaults++;
             int vAddr = kernel->machine->ReadRegister(39);
-            printf("\npage fault vaddr: %d\n",vAddr);
+            printf("\npage fault vaddr: %d\n", vAddr);
             int vpn = vAddr / PageSize;
-            int ppn=kernel->freeMap->FindAndSet();
-            printf("\nppn: %d\n",ppn);
+            int ppn = kernel->freeMap->FindAndSet();
             if (ppn != -1) { //there is room in physical memory
                 kernel->swapIn(ppn, vpn);
-                //set vpn valid bit, let's keep track of all vpns
-                /*ListIterator<TranslationEntry*> iter(&kernel->entryList);
-                for (; !iter.IsDone(); iter.Next()){
-                    if (iter.Item()->pid==kernel->currentThread->getPID() && iter.Item()->virtualPage==vpn){
-                        iter.Item()->valid=true;
-                        iter.Item()->physicalPage=ppn;
-                    }
-                }*/
-                //kernel->entryList[vpn]->valid=true;
-                //kernel->entryList[vpn]->physicalPage=ppn;
                 //kernel->printEntryList();
                 //printf("\n---\n");
                 //kernel->currentThread->space->printPageTable();
             } else { //need to swap out
-                printf("\n****swap out!\n");
-                ppn=kernel->findNextPageToRemove(1);
-                printf("\nswapping out ppn %d\n",ppn);
+                ppn = kernel->findNextPageToRemove(0);
+                printf("\nswapping out ppn %d\n", ppn);
                 kernel->swapOut(ppn);
-                kernel->swapIn(ppn,vpn);
+                kernel->swapIn(ppn, vpn);
                 //kernel->printEntryList();
                 //printf("\n---\n");
                 //kernel->currentThread->space->printPageTable();
-                
+
             }
         }
             return;
