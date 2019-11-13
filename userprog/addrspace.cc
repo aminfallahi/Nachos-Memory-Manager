@@ -160,7 +160,7 @@ AddrSpace::Load(char *fileName) {
 
     pageTable = new TranslationEntry[numPages];
     for (int i = 0; i < numPages; i++) {
-        pageTable[i].virtualPage = i; // for now, virt page # = phys page #
+        pageTable[i].virtualPage = i;
         pageTable[i].physicalPage = -1;
         pageTable[i].valid = false;
         pageTable[i].use = false;
@@ -179,7 +179,6 @@ AddrSpace::Load(char *fileName) {
         pageTable[pageIndex].swapPage=kernel->writeToSwap(buffer, PageSize);
         
         kernel->entryList.Append(&pageTable[pageIndex]);
-        //kernel->entryList[pageTable[pageIndex].virtualPage]=pageTable[pageIndex];
     }
     /*for (int i=0; i<divRoundUp(noffH.initData.size,PageSize); i++,pageIndex++){
         executable->ReadAt(buffer, PageSize, noffH.initData.inFileAddr+i*PageSize);

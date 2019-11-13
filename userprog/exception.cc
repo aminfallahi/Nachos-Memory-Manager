@@ -57,9 +57,9 @@ void userForkFunction(int dum) {
 void userExecFunction(void* progFile) {
     printf("%s executing thread with pid %d\n", (char*) progFile, kernel->currentThread->getPID());
     kernel->currentThread->space = new AddrSpace();
+    kernel->machine->WriteRegister(2, kernel->currentThread->space->getId());
     kernel->currentThread->space->Load((char*) progFile);
     kernel->currentThread->space->Execute();
-    kernel->machine->WriteRegister(2, kernel->currentThread->space->getId());
 }
 
 void
@@ -148,7 +148,7 @@ ExceptionHandler(ExceptionType which) {
                     child->setUserRegister(PCReg, funcAddr);
                     child->setUserRegister(NextPCReg, funcAddr + 4);
                     child->Fork((VoidFunctionPtr) userForkFunction, 0);
-                    kernel->machine->WriteRegister(2, child->getPID());
+                    kernel->machine->WriteRegister(2, child->space->getId());
                     /* set program counter to next instruction (all Instructions are 4 byte wide)*/
                     kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
                     /* set next program counter for brach execution */
@@ -185,6 +185,9 @@ ExceptionHandler(ExceptionType which) {
 
                 case SC_Exit:
                 {
+                    //Releasing allocated physical pages
+                    kernel->releaseMem();
+                    
                     printf("\nTotal Number of References: %d\n", kernel->numRefs);
                     printf("\nTotal Number of Page Faults: %d\n", kernel->numFaults);
                     float hitRate = 1 - ((float) kernel->numFaults) / ((float) kernel->numRefs);
@@ -209,24 +212,23 @@ ExceptionHandler(ExceptionType which) {
         {
             kernel->numFaults++;
             int vAddr = kernel->machine->ReadRegister(39);
-            printf("\npage fault vaddr: %d\n", vAddr);
+            //printf("\npage fault vaddr: %d\n", vAddr);
             int vpn = vAddr / PageSize;
             int ppn = kernel->freeMap->FindAndSet();
             if (ppn != -1) { //there is room in physical memory
+                printf("\nSwapping in ppn %d vpn %d\n",ppn,vpn);
                 kernel->swapIn(ppn, vpn);
-                //kernel->printEntryList();
-                //printf("\n---\n");
-                //kernel->currentThread->space->printPageTable();
             } else { //need to swap out
-                ppn = kernel->findNextPageToRemove(0);
-                printf("\nswapping out ppn %d\n", ppn);
+                ppn = kernel->findNextPageToRemove(repAlg);
+                printf("\nSwapping out ppn %d\n", ppn);
                 kernel->swapOut(ppn);
+                printf("\nSwapping in ppn %d vpn %d\n",ppn,vpn);
                 kernel->swapIn(ppn, vpn);
-                //kernel->printEntryList();
-                //printf("\n---\n");
-                //kernel->currentThread->space->printPageTable();
 
             }
+            if (debug->IsEnabled('v'))
+                kernel->printEntryList();
+
         }
             return;
             ASSERTNOTREACHED();

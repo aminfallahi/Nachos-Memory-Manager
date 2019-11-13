@@ -69,6 +69,7 @@ class Kernel {
     void swapIn(int, int);
     void swapOut(int);
     TranslationEntry* getPageEntryByVPN(int);
+    void releaseMem();    //release allocated physical pages after process finished
     
     int numRefs; //total number of memory references
     int numFaults; //total number of page faults

@@ -49,7 +49,6 @@ class AddrSpace {
     
     void printPageTable();
     
-    void setPTPID(int);
     
   private:
       

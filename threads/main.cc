@@ -52,6 +52,7 @@
 // global variables
 Kernel *kernel;
 Debug *debug;
+int repAlg=0; //page replacement algorithm
 
 
 extern void ThreadTest(void);
@@ -227,6 +228,10 @@ main(int argc, char **argv)
         else if (strcmp(argv[i], "-q") == 0) {
 	    ASSERT(i + 1 < argc);
             quantum=atoi(argv[i + 1]);
+        }
+        else if (strcmp(argv[i], "-ra") == 0) {
+	    ASSERT(i + 1 < argc);
+            repAlg=atoi(argv[i + 1]);
         }
 	else if (strcmp(argv[i], "-K") == 0) {
 	    threadTestFlag = TRUE;
